@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 
 import App from './components/App';
+import PrivateRoute from './components/PrivateRoute';
 import EmployeeTable from "./components/EmployeeTable";
 import Login from "./components/Login";
 
@@ -16,7 +17,7 @@ ReactDOM.render((
         <Switch>
             <Route exact path='/' component={App} />
             <Route exact path='/login' component={Login} />
-            <Route exact path='/employees' component={EmployeeTable} />
+            <PrivateRoute exact path='/employees' component={EmployeeTable} />
         </Switch>
     </Router>
 ), document.getElementById('root'));

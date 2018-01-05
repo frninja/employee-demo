@@ -53,8 +53,10 @@ class Login extends Component {
     }
 
     render() {
+        const { from } = this.props.location.state || {from: { pathname: '/' }};
+
         return AuthService.isAuthenticated() ? (
-            <Redirect to='/'/>
+            <Redirect to={from}/>
         ) : (
             <div className='Login'>
                 <form onSubmit={this.handleSubmit}>

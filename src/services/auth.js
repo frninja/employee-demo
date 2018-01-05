@@ -6,16 +6,16 @@ let AuthService = (function () {
     class AuthService {
         login(username, password) {
             return axios.post(authenticationUrl, undefined, {
-                auth: {
-                    username: username,
-                    password: password
-                },
+                 auth: {
+                     username: username,
+                     password: password
+                 },
+                responseType: 'json'
             })
-            .then(response => {
-                return response.status !== 401;
-            })
-            .catch(error => {
-                return false;
+            .then(response => response.data, error => {
+                if (error.response && error.response.status === 401)
+                    throw new Error('Invalid username or password.')
+                throw error;
             });
         }
     }

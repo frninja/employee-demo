@@ -12,7 +12,8 @@ let AuthService = (function () {
                  },
                 responseType: 'json'
             })
-            .then(response => response.data, error => {
+            .then(response => ({token: response.data}),
+                error => {
                 if (error.response && error.response.status === 401)
                     throw new Error('Invalid username or password.')
                 throw error;

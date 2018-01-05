@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 import './Login.css'
 
@@ -43,7 +44,9 @@ class Login extends Component {
 
         AuthService.login(this.state.username, this.state.password)
             .then(result => {
-                // TODO: Route to employees.
+                sessionStorage.setItem('token', result.token)
+                const history = this.props.history;
+                history.replace('/employees');
             })
             .catch(error => {
                 this.showError(error);
@@ -70,4 +73,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);

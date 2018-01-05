@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import Login from './Login'
+import { Redirect } from 'react-router-dom';
+
+import AuthService from '../services/auth';
 
 class App extends Component {
     render() {
-        return (<Login/>)
+        return AuthService.isAuthenticated() ? (
+                <Redirect to='/employees'/>
+            )
+            : (
+                <Redirect to='/login'/>
+            )
     }
 }
 

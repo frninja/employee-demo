@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import './Login.css'
 
@@ -44,7 +44,6 @@ class Login extends Component {
 
         AuthService.login(this.state.username, this.state.password)
             .then(result => {
-                sessionStorage.setItem('token', result.token)
                 const history = this.props.history;
                 history.replace('/employees');
             })
@@ -54,19 +53,21 @@ class Login extends Component {
     }
 
     render() {
-        return (
-            <div className="Login">
+        return AuthService.isAuthenticated() ? (
+            <Redirect to='/'/>
+        ) : (
+            <div className='Login'>
                 <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="username">
+                    <FormGroup controlId='username'>
                         <ControlLabel>Username</ControlLabel>
-                        <FormControl type="text" value={this.state.login} onChange={this.handleChange}/>
+                        <FormControl type='text' value={this.state.login} onChange={this.handleChange}/>
                     </FormGroup>
-                    <FormGroup controlId="password">
+                    <FormGroup controlId='password'>
                         <ControlLabel>Password</ControlLabel>
-                        <FormControl type="password" value={this.state.password} onChange={this.handleChange} />
+                        <FormControl type='password' value={this.state.password} onChange={this.handleChange}/>
                     </FormGroup>
-                    <Button type="submit" disabled={!this.isValid()}>Login</Button>
-                    <label className="error" hidden={!this.hasError()}>{this.getErrorMessage()}</label>
+                    <Button type='submit' disabled={!this.isValid()}>Login</Button>
+                    <label className='error' hidden={!this.hasError()}>{this.getErrorMessage()}</label>
                 </form>
             </div>
         );

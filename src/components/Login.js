@@ -58,7 +58,7 @@ class Login extends Component {
             <div className="Login">
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup controlId="username">
-                        <ControlLabel>Login</ControlLabel>
+                        <ControlLabel>Username</ControlLabel>
                         <FormControl type="text" value={this.state.login} onChange={this.handleChange}/>
                     </FormGroup>
                     <FormGroup controlId="password">

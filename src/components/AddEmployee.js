@@ -18,7 +18,7 @@ class AddEmployee extends Component {
             name: '',
             email: '',
             birthDay: moment(),
-            salary: '',
+            salary: ''
         }
 
         this.handleNameChange = this.handleNameChange.bind(this);
@@ -45,7 +45,33 @@ class AddEmployee extends Component {
         this.setState({salary});
     }
 
+    validate() {
+        const errors = [];
+        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
+        if (!this.state.name) {
+            errors.push('Name is required.');
+        }
+        if (!emailRegex.test(this.state.email)) {
+            errors.push('Invalid email');
+        }
+        if (this.state.birthDay > moment.now()) {
+            errors.push('Birth day should not be in future.');
+        }
+        if (!this.state.salary || new Number(this.state.salary) <= 0) {
+            errors.push('Salary should be greater than zero.');
+        }
+
+        return errors;
+    }
+
     handleSave() {
+        const errors = this.validate();
+        if (errors.length > 0) {
+            console.log('Invalid employee input.');
+            return;
+        }
+
         console.log('Saving employee...');
         EmployeeService.createEmployee(this.state.name, this.state.email, this.state.birthDay, this.state.salary)
         .then(response => {
@@ -64,6 +90,8 @@ class AddEmployee extends Component {
     }
 
     render() {
+        const errors = this.validate();
+
         return (
             <form onSubmit={this.handleSave}>
                 <FormGroup controlId='name'>
@@ -82,8 +110,9 @@ class AddEmployee extends Component {
                     <ControlLabel>Salary</ControlLabel>
                     <FormControl type='number' value={this.state.salary} onChange={e => this.handleSalaryChange(e.target.value)}/>
                 </FormGroup>
-                <Button type='submit'>Save</Button>
+                <Button disabled={errors.length > 0} type='submit'>Save</Button>
                 <Button bsStyle='warning' onClick={this.handleCancel}>Cancel</Button>
+                <span className='error' hidden={errors.length === 0}>{errors.length > 0 ? errors[0] : ''}</span>
             </form>
         )
     }

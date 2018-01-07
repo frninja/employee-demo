@@ -26,6 +26,7 @@ class AddEmployee extends Component {
         this.handleBirthDayChange = this.handleBirthDayChange.bind(this);
         this.handleSalaryChange = this.handleSalaryChange.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
     }
 
     handleNameChange(name) {
@@ -55,6 +56,13 @@ class AddEmployee extends Component {
         .catch(error => console.log('Employee save failed: ' + error.message));
     }
 
+    handleCancel() {
+        console.log('Cancel adding employee!');
+
+        const history = this.props.history;
+        history.push('/employees');
+    }
+
     render() {
         return (
             <form onSubmit={this.handleSave}>
@@ -75,6 +83,7 @@ class AddEmployee extends Component {
                     <FormControl type='number' value={this.state.salary} onChange={e => this.handleSalaryChange(e.target.value)}/>
                 </FormGroup>
                 <Button type='submit'>Save</Button>
+                <Button bsStyle='warning' onClick={this.handleCancel}>Cancel</Button>
             </form>
         )
     }

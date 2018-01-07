@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 
 import App from './components/App';
 import PrivateRoute from './components/PrivateRoute';
-import EmployeeTable from "./components/EmployeeTable";
+import EmployeeTable from "./components/EmployeeIndex";
 import Login from "./components/Login";
 
 ReactDOM.render((

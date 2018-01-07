@@ -1,12 +1,16 @@
 import axios from 'axios';
 
-let AuthService = (function () {
+const AuthService = (function () {
     // TODO: Extract URL to config.
     var authenticationUrl = 'http://localhost:5347/api/authenticate';
 
     class AuthService {
         isAuthenticated() {
             return sessionStorage.getItem('token') !== null
+        }
+
+        getAuthenticationToken() {
+            return sessionStorage.getItem('token');
         }
 
         login(username, password) {

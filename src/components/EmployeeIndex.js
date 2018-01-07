@@ -107,8 +107,8 @@ class EmployeeRow extends Component {
                 <td>{email}</td>
                 <td>{new Date(birthDay).toLocaleDateString()}</td>
                 <td>{salary}</td>
-                <Button>Edit</Button>
-                <Button>Delete</Button>
+                <td><Button>Edit</Button></td>
+                <td><Button>Delete</Button></td>
             </tr>
         )
     }

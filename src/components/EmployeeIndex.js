@@ -3,6 +3,8 @@ import { Button, Table } from 'react-bootstrap';
 
 import EmployeeService from '../services/employee';
 
+import './EmployeeIndex.css';
+
 class EmployeeIndex extends Component {
     constructor(props) {
         super(props);
@@ -64,11 +66,13 @@ class EmployeeTable extends Component {
         return (
             <Table>
                 <EmployeeTableHeader />
-                {
-                    this.props.items.map(employee => (
-                        <EmployeeRow employee={employee}/>
-                    ))
-                }
+                <tbody>
+                    {
+                        this.props.items.map(employee => (
+                            <EmployeeRow key={employee.id} employee={employee}/>
+                        ))
+                    }
+                </tbody>
             </Table>
         )
     }
@@ -93,8 +97,20 @@ class EmployeeRow extends Component {
 
 class EmployeeTablePaginator extends Component {
     render() {
+        const { currentPage, totalPagesCount } = this.props;
+        const pages = Array.apply(null, { length: totalPagesCount });
         return (
-            <label>Paginator</label>
+            <div className='pagination'>
+                <ul>
+                    {
+                        pages.map((_, i) => (
+                            <li key={i}>
+                                <a>{i + 1}</a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
         )
     }
 }

@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'react-bootstrap';
 
-import EmployeeService from '../services/employee';
+import AddEmployeeButton from './AddEmployeeButton';
+import EmployeeTable from './EmployeeTable';
+import EmployeeTablePaginator from './EmployeeTablePaginator';
 
-import './EmployeeIndex.css';
+import SortDirections from './shared/SortDirections';
 
-const SortDirections = {
-    DESC: 'desc',
-    ASC: 'asc'
-}
+import EmployeeService from '../services/EmployeeService';
 
 class EmployeeIndex extends Component {
     constructor(props) {
@@ -98,97 +96,6 @@ class EmployeeIndex extends Component {
                 <EmployeeTablePaginator currentPage={pageNumber}
                                         totalPagesCount={totalPagesCount}
                                         onPageChanged={this.handlePageChanged}/>
-            </div>
-        )
-    }
-}
-
-class AddEmployeeButton extends Component {
-    render() {
-        return (
-            <Button>Add</Button>
-        )
-    }
-}
-
-class EmployeeTable extends Component {
-    render() {
-        return (
-            <Table>
-                <EmployeeTableHeader sortBy={this.props.sortBy}
-                                     sortDirection={this.props.sortDirection}
-                                     onSortChanged={this.props.onSortChanged}/>
-                <tbody>
-                    {
-                        this.props.items.map(employee => (
-                            <EmployeeRow key={employee.id} employee={employee}/>
-                        ))
-                    }
-                </tbody>
-            </Table>
-        )
-    }
-}
-
-class EmployeeTableHeader extends Component {
-    capitalize(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    getNameWithDirection(name) {
-        if (this.props.sortBy !== name)
-            return this.capitalize(name);
-
-        const direction = this.props.sortDirection === SortDirections.DESC ? '\u2191' : '\u2193';
-        return this.capitalize(name) + direction;
-    }
-
-    render() {
-        return (
-            <thead>
-            <tr>
-                <th onClick={() => this.props.onSortChanged('name')}>{this.getNameWithDirection('name')}</th>
-                <th onClick={() => this.props.onSortChanged('email')}>{this.getNameWithDirection('email')}</th>
-                <th onClick={() => this.props.onSortChanged('birthday')}>{this.getNameWithDirection('birthday')}</th>
-                <th onClick={() => this.props.onSortChanged('salary')}>{this.getNameWithDirection('salary')}</th>
-            </tr>
-            </thead>
-        )
-    }
-}
-
-class EmployeeRow extends Component {
-    render() {
-        const { name, email, birthDay, salary } = this.props.employee;
-
-        return (
-            <tr>
-                <td>{name}</td>
-                <td>{email}</td>
-                <td>{new Date(birthDay).toLocaleDateString()}</td>
-                <td>{salary}</td>
-                <td><Button>Edit</Button></td>
-                <td><Button>Delete</Button></td>
-            </tr>
-        )
-    }
-}
-
-class EmployeeTablePaginator extends Component {
-    render() {
-        const { currentPage, totalPagesCount } = this.props;
-        const pages = [...Array(totalPagesCount).keys()].map(e => ++e);
-        return (
-            <div className='pagination'>
-                <ul>
-                    {
-                        pages.map(page => (
-                            <li key={page} className={page === currentPage ? 'current' : ''}>
-                                <a onClick={() => this.props.onPageChanged(page)}>{page}</a>
-                            </li>
-                        ))
-                    }
-                </ul>
             </div>
         )
     }

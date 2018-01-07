@@ -4,7 +4,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 
 import './Login.css'
 
-import AuthService from '../services/auth';
+import AuthService from '../services/AuthService';
 
 class Login extends Component {
     constructor(props) {

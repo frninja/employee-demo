@@ -1,5 +1,5 @@
 import axios from 'axios';
-import AuthService from './auth';
+import AuthService from './AuthService';
 
 const EmployeeService = (function () {
     var employeeApiBaseUrl = 'http://localhost:5347/api/employees';

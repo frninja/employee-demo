@@ -10,10 +10,27 @@ class EmployeeIndex extends Component {
         super(props);
 
         this.state = {}
+        this.handlePageChanged = this.handlePageChanged.bind(this);
     }
 
     componentDidMount() {
-        EmployeeService.getEmployees({pageSize: 10})
+        EmployeeService.getEmployees({
+            pageSize: 10,
+            pageNumber: 1,
+        })
+        .then(response => {
+            this.setState({pagedEmployees: response.data})
+        })
+        .catch(error => {console.log(error.message)});
+    }
+
+    handlePageChanged(pageNumber) {
+        console.log('Page changed to ' + pageNumber);
+
+        EmployeeService.getEmployees({
+            pageSize: 10,
+            pageNumber: pageNumber,
+        })
         .then(response => {
             this.setState({pagedEmployees: response.data})
         })
@@ -32,7 +49,9 @@ class EmployeeIndex extends Component {
             <div>
                 <AddEmployeeButton/> <br/>
                 <EmployeeTable items={items}/>
-                <EmployeeTablePaginator currentPage={pageNumber} totalPagesCount={totalPagesCount}/>
+                <EmployeeTablePaginator currentPage={pageNumber}
+                                        totalPagesCount={totalPagesCount}
+                                        onPageChanged={this.handlePageChanged}/>
             </div>
         )
     }
@@ -98,14 +117,14 @@ class EmployeeRow extends Component {
 class EmployeeTablePaginator extends Component {
     render() {
         const { currentPage, totalPagesCount } = this.props;
-        const pages = Array.apply(null, { length: totalPagesCount });
+        const pages = [...Array(totalPagesCount).keys()].map(e => ++e);
         return (
             <div className='pagination'>
                 <ul>
                     {
-                        pages.map((_, i) => (
-                            <li key={i}>
-                                <a>{i + 1}</a>
+                        pages.map(page => (
+                            <li key={page} className={page === currentPage ? 'current' : ''}>
+                                <a onClick={() => this.props.onPageChanged(page)}>{page}</a>
                             </li>
                         ))
                     }

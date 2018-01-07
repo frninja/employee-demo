@@ -8,3 +8,8 @@
     display: inline;
     padding: 10px;
 }
+
+.pagination ul li.current a {
+    font-weight: bold;
+    color: blue;
+}

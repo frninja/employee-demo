@@ -5,19 +5,28 @@ import EmployeeService from '../services/employee';
 
 import './EmployeeIndex.css';
 
+const SortDirections = {
+    DESC: 'desc',
+    ASC: 'asc'
+}
+
 class EmployeeIndex extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {}
+        this.state = {
+            currentPage: 1,
+            pageSize: 10,
+            sortBy: 'id',
+            sortDirection: SortDirections.ASC
+        }
+
         this.handlePageChanged = this.handlePageChanged.bind(this);
+        this.handleSortChanged = this.handleSortChanged.bind(this);
     }
 
     componentDidMount() {
-        EmployeeService.getEmployees({
-            pageSize: 10,
-            pageNumber: 1,
-        })
+        EmployeeService.getEmployees(this.getPaginationSettings())
         .then(response => {
             this.setState({pagedEmployees: response.data})
         })
@@ -26,15 +35,49 @@ class EmployeeIndex extends Component {
 
     handlePageChanged(pageNumber) {
         console.log('Page changed to ' + pageNumber);
+        this.setState({currentPage: pageNumber});
 
-        EmployeeService.getEmployees({
-            pageSize: 10,
-            pageNumber: pageNumber,
-        })
+        EmployeeService.getEmployees(this.getPaginationSettings({pageNumber}))
         .then(response => {
             this.setState({pagedEmployees: response.data})
         })
         .catch(error => {console.log(error.message)});
+    }
+
+    handleSortChanged(sortBy) {
+        let sortDirection;
+        if (sortBy !== this.state.sortBy) {
+            sortDirection = SortDirections.ASC;
+        }
+        else {
+            sortDirection = this.state.sortDirection === SortDirections.DESC ? SortDirections.ASC : SortDirections.DESC;
+        }
+        this.setState({sortBy, sortDirection});
+        console.log('Sort changed to ' + sortBy + ' ' + sortDirection);
+
+        EmployeeService.getEmployees(this.getPaginationSettings({
+            pageNumber: 1,
+            orderBy: sortBy,
+            descending: sortDirection === SortDirections.DESC
+        }))
+        .then(response => {
+            this.setState({pagedEmployees: response.data})
+        })
+        .catch(error => {console.log(error.message)});
+    }
+
+    getPaginationSettings(patch) {
+        const settings =  {
+            pageSize: this.state.pageSize,
+            pageNumber: this.state.currentPage,
+            orderBy: this.state.sortBy,
+            descending: this.state.sortDirection === SortDirections.DESC
+        }
+
+        if (!patch)
+            return settings;
+
+        return Object.assign(settings, patch);
     }
 
     render() {
@@ -48,7 +91,10 @@ class EmployeeIndex extends Component {
         return (
             <div>
                 <AddEmployeeButton/> <br/>
-                <EmployeeTable items={items}/>
+                <EmployeeTable items={items}
+                               sortBy={this.state.sortBy}
+                               sortDirection={this.state.sortDirection}
+                               onSortChanged={this.handleSortChanged}/>
                 <EmployeeTablePaginator currentPage={pageNumber}
                                         totalPagesCount={totalPagesCount}
                                         onPageChanged={this.handlePageChanged}/>
@@ -65,26 +111,13 @@ class AddEmployeeButton extends Component {
     }
 }
 
-class EmployeeTableHeader extends Component {
-    render() {
-        return (
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Birtday</th>
-                    <th>Salary</th>
-                </tr>
-            </thead>
-        )
-    }
-}
-
 class EmployeeTable extends Component {
     render() {
         return (
             <Table>
-                <EmployeeTableHeader />
+                <EmployeeTableHeader sortBy={this.props.sortBy}
+                                     sortDirection={this.props.sortDirection}
+                                     onSortChanged={this.props.onSortChanged}/>
                 <tbody>
                     {
                         this.props.items.map(employee => (
@@ -93,6 +126,33 @@ class EmployeeTable extends Component {
                     }
                 </tbody>
             </Table>
+        )
+    }
+}
+
+class EmployeeTableHeader extends Component {
+    capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    getNameWithDirection(name) {
+        if (this.props.sortBy !== name)
+            return this.capitalize(name);
+
+        const direction = this.props.sortDirection === SortDirections.DESC ? '\u2191' : '\u2193';
+        return this.capitalize(name) + direction;
+    }
+
+    render() {
+        return (
+            <thead>
+            <tr>
+                <th onClick={() => this.props.onSortChanged('name')}>{this.getNameWithDirection('name')}</th>
+                <th onClick={() => this.props.onSortChanged('email')}>{this.getNameWithDirection('email')}</th>
+                <th onClick={() => this.props.onSortChanged('birthday')}>{this.getNameWithDirection('birthday')}</th>
+                <th onClick={() => this.props.onSortChanged('salary')}>{this.getNameWithDirection('salary')}</th>
+            </tr>
+            </thead>
         )
     }
 }

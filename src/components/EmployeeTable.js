@@ -14,7 +14,7 @@ class EmployeeTable extends Component {
                 <tbody>
                 {
                     this.props.items.map(employee => (
-                        <EmployeeRow key={employee.id} employee={employee}/>
+                        <EmployeeRow key={employee.id} employee={employee} onDelete={this.props.onDelete}/>
                     ))
                 }
                 </tbody>

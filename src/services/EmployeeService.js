@@ -31,6 +31,15 @@ const EmployeeService = (function () {
                 responseType: 'json'
             })
         }
+
+        deleteEmployee(id) {
+            return axios.delete(employeeApiBaseUrl + '/' + id, {
+                headers: {
+                    'Authorization': 'Basic ' + AuthService.getAuthenticationToken()
+                },
+                responseType: 'json'
+            });
+        }
     }
 
     return EmployeeService;

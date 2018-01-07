@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 
 class EmployeeRow extends Component {
     render() {
-        const { name, email, birthDay, salary } = this.props.employee;
+        const { id, name, email, birthDay, salary } = this.props.employee;
 
         return (
             <tr>
@@ -12,7 +12,7 @@ class EmployeeRow extends Component {
                 <td>{new Date(birthDay).toLocaleDateString()}</td>
                 <td>{salary}</td>
                 <td><Button>Edit</Button></td>
-                <td><Button>Delete</Button></td>
+                <td><Button onClick={() => this.props.onDelete(id)}>Delete</Button></td>
             </tr>
         )
     }

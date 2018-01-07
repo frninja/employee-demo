@@ -21,6 +21,7 @@ class EmployeeIndex extends Component {
 
         this.handlePageChanged = this.handlePageChanged.bind(this);
         this.handleSortChanged = this.handleSortChanged.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -64,6 +65,14 @@ class EmployeeIndex extends Component {
         .catch(error => {console.log(error.message)});
     }
 
+    handleDelete(id) {
+        console.log('Delete employee \'' + id + '\'');
+
+        EmployeeService.deleteEmployee(id).then(response => {
+            this.handlePageChanged(this.state.currentPage);
+        }).catch(error => console.log('Error while delete: ' + error.message));
+    }
+
     getPaginationSettings(patch) {
         const settings =  {
             pageSize: this.state.pageSize,
@@ -92,7 +101,8 @@ class EmployeeIndex extends Component {
                 <EmployeeTable items={items}
                                sortBy={this.state.sortBy}
                                sortDirection={this.state.sortDirection}
-                               onSortChanged={this.handleSortChanged}/>
+                               onSortChanged={this.handleSortChanged}
+                               onDelete={this.handleDelete}/>
                 <EmployeeTablePaginator currentPage={pageNumber}
                                         totalPagesCount={totalPagesCount}
                                         onPageChanged={this.handlePageChanged}/>

@@ -41,6 +41,15 @@ const EmployeeService = (function () {
             })
         }
 
+        updateEmployee({id, name, email, birthDay, salary}) {
+            return axios.put(employeeApiBaseUrl + '/' + id, {name, email, birthDay, salary}, {
+                headers: {
+                    'Authorization': 'Basic ' + AuthService.getAuthenticationToken()
+                },
+                responseType: 'json'
+            });
+        }
+
         deleteEmployee(id) {
             return axios.delete(employeeApiBaseUrl + '/' + id, {
                 headers: {

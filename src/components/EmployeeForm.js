@@ -23,10 +23,6 @@ class EmployeeForm extends Component {
         this.onSave = this.onSave.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState(this.unpackEmployeeWithDefaults(nextProps.employee));
-    }
-
     unpackEmployeeWithDefaults = function ({ name = '', email = '', birthDay = moment(), salary = 0 } = {}) {
         return { name, email, birthDay: moment(birthDay), salary };
     };
@@ -107,6 +103,7 @@ class EmployeeForm extends Component {
                 </FormGroup>
                 <Button type='submit'>Save</Button>
                 <Button bsStyle='warning' onClick={this.props.onCancel}>Cancel</Button>
+                <span className='error' hidden={!this.props.errorMessage}>{this.props.errorMessage}</span>
             </form>
         )
     }

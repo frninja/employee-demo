@@ -44,10 +44,10 @@ class AddEmployee extends Component {
     render() {
         return (
             <div>
-                <EmployeeForm onSave={this.handleSave}
+                <EmployeeForm errorMessage={this.state.errorMessage}
+                              onSave={this.handleSave}
                               onCancel={this.handleCancel}
                               onInvalidInput={this.handleInvalidInput}/>
-                <span className='error' hidden={!this.state.errorMessage}>{this.state.errorMessage}</span>
             </div>
         )
     }

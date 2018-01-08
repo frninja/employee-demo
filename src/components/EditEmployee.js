@@ -9,6 +9,10 @@ class EditEmployee extends Component {
         super(props);
 
         this.state = this.mapParamsToState(this.props.match.params);
+
+        this.handleSave = this.handleSave.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleInvalidInput = this.handleInvalidInput.bind(this);
     }
 
     mapParamsToState({employeeId}) {
@@ -24,7 +28,16 @@ class EditEmployee extends Component {
     }
 
     handleSave(employee) {
-        // TODO: Update employee.
+        EmployeeService.updateEmployee({id: this.state.employee.id, ...employee})
+        .then(response => {
+            console.log('Employee edited.');
+            const history = this.props.history;
+            history.push('/employees');
+        })
+        .catch(error => {
+            console.log('Employee edit failed: ' + error.message);
+            this.setState({errorMessage: 'Invalid request.'});
+        })
     }
 
     handleCancel() {
@@ -39,12 +52,19 @@ class EditEmployee extends Component {
     }
 
     render() {
+        if (!this.state.employee) {
+            return (
+                <div>Loading...</div>
+            )
+        }
+
         return (
             <div>
-                <EmployeeForm employee={this.state.employee} onSave={this.handleSave}
+                <EmployeeForm employee={this.state.employee}
+                              errorMessage={this.state.errorMessage}
+                              onSave={this.handleSave}
                               onCancel={this.handleCancel}
                               onInvalidInput={this.handleInvalidInput}/>
-                <span className='error' hidden={!this.state.errorMessage}>{this.state.errorMessage}</span>
             </div>
         )
     }

@@ -43,8 +43,7 @@ class EditEmployee extends Component {
     handleCancel() {
         console.log('Cancel adding employee!');
 
-        const history = this.props.history;
-        history.push('/employees');
+        goToPreviousLocation(this, '/employees');
     }
 
     handleInvalidInput(errors) {

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import EmployeeForm from './EmployeeForm';
 
 import EmployeeService from '../services/EmployeeService';
+import goToPreviousLocation from '../utils/GoToPreviousLocation';
 
 class EditEmployee extends Component {
     constructor(props) {
@@ -31,8 +32,7 @@ class EditEmployee extends Component {
         EmployeeService.updateEmployee({id: this.state.employee.id, ...employee})
         .then(response => {
             console.log('Employee edited.');
-            const history = this.props.history;
-            history.push('/employees');
+            goToPreviousLocation(this, '/employees');
         })
         .catch(error => {
             console.log('Employee edit failed: ' + error.message);

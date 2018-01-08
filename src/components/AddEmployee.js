@@ -14,20 +14,37 @@ class AddEmployee extends Component {
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleInvalidInput = this.handleInvalidInput.bind(this);
+
+        this.handleEmployeeSaveRequestSucceeded = this.handleEmployeeSaveRequestSucceeded.bind(this);
+        this.handleEmployeeSaveRequestFailed = this.handleEmployeeSaveRequestFailed.bind(this);
+    }
+
+    handleEmployeeSaveRequestSucceeded(response) {
+        console.log('Employee saved.');
+
+        const location = this.props.location;
+        let redirectTo;
+        if (location.state && location.state.from) {
+            redirectTo = this.props.location.state.from;
+        }
+        else {
+            redirectTo = '/employees';
+        }
+
+        const history = this.props.history;
+        history.push(redirectTo);
+    }
+
+    handleEmployeeSaveRequestFailed(error) {
+        console.log('Employee save failed: ' + error.message);
+        this.setState({errorMessage: 'Invalid request.'});
     }
 
     handleSave(employee) {
         console.log('Saving employee...');
         EmployeeService.createEmployee(employee)
-        .then(response => {
-            console.log('Employee saved');
-            const history = this.props.history;
-            history.push('/employees');
-        })
-        .catch(error => {
-            console.log('Employee save failed: ' + error.message);
-            this.setState({errorMessage: 'Invalid request.'});
-        });
+            .then(this.handleEmployeeSaveRequestSucceeded)
+            .catch(this.handleEmployeeSaveRequestFailed);
     }
 
     handleCancel() {

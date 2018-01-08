@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import queryString from 'query-string';
 
@@ -131,7 +132,7 @@ class EmployeeIndex extends Component {
         const { pageNumber, totalPagesCount, items } = this.state.pagedEmployees;
         return (
             <div>
-                <AddEmployeeButton/> <br/>
+                <AddEmployeeButton /> <br/>
                 <EmployeeTable items={items}
                                sortBy={this.state.sortBy}
                                sortDirection={this.state.sortDirection}
@@ -145,4 +146,4 @@ class EmployeeIndex extends Component {
     }
 }
 
-export default EmployeeIndex;
+export default withRouter(EmployeeIndex);

@@ -20,7 +20,7 @@ const EmployeeService = (function () {
             });
         }
 
-        createEmployee(name, email, birthDay, salary) {
+        createEmployee({name, email, birthDay, salary}) {
             return axios.post(employeeApiBaseUrl, {
                 name, email, birthDay, salary
             },

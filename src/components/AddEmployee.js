@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import EmployeeForm from './EmployeeForm';
 
 import EmployeeService from '../services/EmployeeService';
+import goToPreviousLocation from '../utils/GoToPreviousLocation';
 
 class AddEmployee extends Component {
     constructor(props) {
@@ -22,17 +23,7 @@ class AddEmployee extends Component {
     handleEmployeeSaveRequestSucceeded(response) {
         console.log('Employee saved.');
 
-        const location = this.props.location;
-        let redirectTo;
-        if (location.state && location.state.from) {
-            redirectTo = this.props.location.state.from;
-        }
-        else {
-            redirectTo = '/employees';
-        }
-
-        const history = this.props.history;
-        history.push(redirectTo);
+        goToPreviousLocation(this, '/employees');
     }
 
     handleEmployeeSaveRequestFailed(error) {

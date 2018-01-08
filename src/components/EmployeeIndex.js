@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import queryString from 'query-string';
+
 import AddEmployeeButton from './AddEmployeeButton';
 import EmployeeTable from './EmployeeTable';
 import EmployeeTablePaginator from './EmployeeTablePaginator';
@@ -13,15 +15,30 @@ class EmployeeIndex extends Component {
         super(props);
 
         this.state = {
-            currentPage: 1,
+            ...this.mapLocationToState(this.props.location),
             pageSize: 10,
-            sortBy: 'id',
-            sortDirection: SortDirections.ASC
         }
 
         this.handlePageChanged = this.handlePageChanged.bind(this);
         this.handleSortChanged = this.handleSortChanged.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+    }
+
+    mapLocationToState(location) {
+        const { page: currentPage = 1, sortBy = 'id', sortDirection = SortDirections.ASC } = queryString.parse(location.search);
+        return { currentPage, sortBy, sortDirection };
+    }
+
+    mapStateToLocation(state, patch) {
+        const patchedState = Object.assign({}, state, patch);
+        return {
+            pathname: '/employees',
+            search: queryString.stringify({
+                page: patchedState.currentPage,
+                sortBy: patchedState.sortBy,
+                sortDirection: patchedState.sortDirection
+            })
+        };
     }
 
     componentDidMount() {
@@ -34,13 +51,18 @@ class EmployeeIndex extends Component {
 
     handlePageChanged(pageNumber) {
         console.log('Page changed to ' + pageNumber);
-        this.setState({currentPage: pageNumber});
+        const statePatch = {currentPage: pageNumber};
+        this.setState(statePatch);
 
         EmployeeService.getEmployees(this.getPaginationSettings({pageNumber}))
         .then(response => {
             this.setState({pagedEmployees: response.data})
         })
         .catch(error => {console.log(error.message)});
+
+        // Update URL.
+        const history = this.props.history;
+        history.replace(this.mapStateToLocation(this.state, statePatch));
     }
 
     handleSortChanged(sortBy) {
@@ -51,7 +73,9 @@ class EmployeeIndex extends Component {
         else {
             sortDirection = this.state.sortDirection === SortDirections.DESC ? SortDirections.ASC : SortDirections.DESC;
         }
-        this.setState({sortBy, sortDirection});
+
+        const statePatch = {currentPage: 1, sortBy, sortDirection};
+        this.setState(statePatch);
         console.log('Sort changed to ' + sortBy + ' ' + sortDirection);
 
         EmployeeService.getEmployees(this.getPaginationSettings({
@@ -63,6 +87,10 @@ class EmployeeIndex extends Component {
             this.setState({pagedEmployees: response.data})
         })
         .catch(error => {console.log(error.message)});
+
+        // Update URL.
+        const history = this.props.history;
+        history.replace(this.mapStateToLocation(this.state, statePatch));
     }
 
     handleDelete(id) {

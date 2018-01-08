@@ -13,11 +13,7 @@ class EmployeeForm extends Component {
     constructor(props) {
         super(props);
 
-        const unpackEmployeeWithDefaults = function ({ name = '', email = '', birthDay = moment(), salary = 0 } = {}) {
-            return { name, email, birthDay, salary };
-        };
-
-        this.state = unpackEmployeeWithDefaults(this.props.employee);
+        this.state = this.unpackEmployeeWithDefaults(this.props.employee);
 
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -26,6 +22,14 @@ class EmployeeForm extends Component {
 
         this.onSave = this.onSave.bind(this);
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState(this.unpackEmployeeWithDefaults(nextProps.employee));
+    }
+
+    unpackEmployeeWithDefaults = function ({ name = '', email = '', birthDay = moment(), salary = 0 } = {}) {
+        return { name, email, birthDay: moment(birthDay), salary };
+    };
 
     handleNameChange(name) {
         this.setState({name});

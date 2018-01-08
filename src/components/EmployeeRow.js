@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class EmployeeRow extends Component {
     render() {
@@ -11,7 +12,7 @@ class EmployeeRow extends Component {
                 <td>{email}</td>
                 <td>{new Date(birthDay).toLocaleDateString()}</td>
                 <td>{salary}</td>
-                <td><Button>Edit</Button></td>
+                <td><Link to={'/employees/' + id + '/edit'}><Button>Edit</Button></Link></td>
                 <td><Button onClick={() => this.props.onDelete(id)}>Delete</Button></td>
             </tr>
         )

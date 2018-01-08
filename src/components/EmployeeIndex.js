@@ -73,6 +73,12 @@ class EmployeeIndex extends Component {
         }).catch(error => console.log('Error while delete: ' + error.message));
     }
 
+    handleEdit(id) {
+        console.log('Edit employee \'' + id + '\'');
+
+
+    }
+
     getPaginationSettings(patch) {
         const settings =  {
             pageSize: this.state.pageSize,

@@ -20,6 +20,15 @@ const EmployeeService = (function () {
             });
         }
 
+        getEmployee(id) {
+            return axios.get(employeeApiBaseUrl + '/' + id, {
+                headers: {
+                    'Authorization': 'Basic ' + AuthService.getAuthenticationToken()
+                },
+                responseType: 'json'
+            });
+        }
+
         createEmployee({name, email, birthDay, salary}) {
             return axios.post(employeeApiBaseUrl, {
                 name, email, birthDay, salary

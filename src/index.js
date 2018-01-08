@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { HashRouter as Router } from 'react-router-dom';
 
-import Routes from './Routes';
+import Routes from './components/Routes';
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';

@@ -15,27 +15,19 @@ class AddEmployee extends Component {
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleInvalidInput = this.handleInvalidInput.bind(this);
-
-        this.handleEmployeeSaveRequestSucceeded = this.handleEmployeeSaveRequestSucceeded.bind(this);
-        this.handleEmployeeSaveRequestFailed = this.handleEmployeeSaveRequestFailed.bind(this);
-    }
-
-    handleEmployeeSaveRequestSucceeded(response) {
-        console.log('Employee saved.');
-
-        goToPreviousLocation(this, '/employees');
-    }
-
-    handleEmployeeSaveRequestFailed(error) {
-        console.log('Employee save failed: ' + error.message);
-        this.setState({errorMessage: 'Invalid request.'});
     }
 
     handleSave(employee) {
         console.log('Saving employee...');
         EmployeeService.createEmployee(employee)
-            .then(this.handleEmployeeSaveRequestSucceeded)
-            .catch(this.handleEmployeeSaveRequestFailed);
+            .then(response => {
+                console.log('Employee saved.');
+                goToPreviousLocation(this, '/employees');
+            })
+            .catch(error => {
+                console.log('Employee save failed: ' + error.message);
+                this.setState({errorMessage: 'Invalid request.'});
+            });
     }
 
     handleCancel() {

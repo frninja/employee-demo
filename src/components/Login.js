@@ -9,37 +9,36 @@ import AuthService from '../services/AuthService';
 class Login extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             username: '',
             password: '',
-            error: null
         };
-    }
 
-    getErrorMessage() {
-        return this.state.error && this.state.error.message;
-    }
-
-    hasError() {
-        return this.state.error !== null;
+        this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     isValid() {
         return this.state.username.length > 0 && this.state.password.length > 0;
     }
 
-    showError(error) {
-        return this.setState({error: error})
-    }
-
-    handleChange = (event) => {
+    handleUsernameChange(event) {
         this.setState({
-            [event.target.id]: event.target.value,
-            error: null
+            username: event.target.value,
+            errorMessage: ''
         });
     }
 
-    handleSubmit = (event) => {
+    handlePasswordChange(event) {
+        this.setState({
+            password: event.target.value,
+            errorMessage: ''
+        });
+    }
+
+    handleSubmit(event) {
         event.preventDefault();
 
         AuthService.login(this.state.username, this.state.password)
@@ -48,7 +47,7 @@ class Login extends Component {
                 history.replace('/employees');
             })
             .catch(error => {
-                this.showError(error);
+                return this.setState({errorMessage: error.message});
             });
     }
 
@@ -62,14 +61,14 @@ class Login extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup controlId='username'>
                         <ControlLabel>Username</ControlLabel>
-                        <FormControl type='text' value={this.state.login} onChange={this.handleChange}/>
+                        <FormControl type='text' value={this.state.login} onChange={this.handleUsernameChange}/>
                     </FormGroup>
                     <FormGroup controlId='password'>
                         <ControlLabel>Password</ControlLabel>
-                        <FormControl type='password' value={this.state.password} onChange={this.handleChange}/>
+                        <FormControl type='password' value={this.state.password} onChange={this.handlePasswordChange}/>
                     </FormGroup>
                     <Button type='submit' disabled={!this.isValid()}>Login</Button>
-                    <label className='error' hidden={!this.hasError()}>{this.getErrorMessage()}</label>
+                    <label className='error' hidden={!this.state.errorMessage}>{this.state.errorMessage}</label>
                 </form>
             </div>
         );

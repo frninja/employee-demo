@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import SortDirections from './shared/SortDirections';
+import SortDirections from '../data/SortDirections';
 
 class EmployeeTableHeader extends Component {
     capitalize(string) {

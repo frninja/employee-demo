@@ -7,7 +7,7 @@ import AddEmployeeButton from './AddEmployeeButton';
 import EmployeeTable from './EmployeeTable';
 import EmployeeTablePaginator from './EmployeeTablePaginator';
 
-import SortDirections from './shared/SortDirections';
+import SortDirections from '../data/SortDirections';
 
 import EmployeeService from '../services/EmployeeService';
 

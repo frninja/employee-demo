@@ -68,7 +68,9 @@ class EmployeeForm extends Component {
         return errors;
     }
 
-    onSave() {
+    onSave(event) {
+        event.preventDefault();
+
         const errors = this.validate();
         if (errors.length > 0) {
             return;

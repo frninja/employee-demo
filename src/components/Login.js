@@ -13,6 +13,7 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            redirectToReferrer: false
         };
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -43,8 +44,7 @@ class Login extends Component {
 
         AuthService.login(this.state.username, this.state.password)
             .then(result => {
-                const history = this.props.history;
-                history.replace('/employees');
+                this.setState({redirectToReferrer: true});
             })
             .catch(error => {
                 return this.setState({errorMessage: error.message});
@@ -52,11 +52,14 @@ class Login extends Component {
     }
 
     render() {
-        const { from } = this.props.location.state || {from: { pathname: '/' }};
+        const { from } = this.props.location.state || {from: { pathname: '/employees' }};
 
-        return AuthService.isAuthenticated() ? (
-            <Redirect to={from}/>
-        ) : (
+        if (this.state.redirectToReferrer)
+            return (
+                <Redirect to={from}/>
+        ) ;
+
+        return (
             <div className='Login'>
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup controlId='username'>
